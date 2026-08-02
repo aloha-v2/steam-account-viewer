@@ -1,0 +1,21 @@
+[package]
+name = "steam-account-viewer"
+version = "0.1.0"
+description = "Private local Steam account history viewer"
+authors = ["aloha-v2"]
+edition = "2021"
+
+[lib]
+name = "steam_account_viewer_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+base64 = "0.22"
+
+[target.'cfg(windows)'.dependencies]
+winreg = "0.55"
