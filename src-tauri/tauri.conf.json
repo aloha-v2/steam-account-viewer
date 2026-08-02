@@ -12,6 +12,7 @@
     "withGlobalTauri": true,
     "windows": [
       {
+        "label": "main",
         "title": "Steam Accounts",
         "width": 980,
         "height": 700,
@@ -19,7 +20,7 @@
         "minHeight": 560,
         "center": true,
         "decorations": false,
-        "transparent": true,
+        "transparent": false,
         "shadow": true
       }
     ],
