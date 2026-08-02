@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "identifier": "com.aloha.steam-account-viewer",
   "build": {
+    "beforeDevCommand": "npm run frontend",
+    "beforeBuildCommand": "npm run frontend",
     "frontendDist": "../dist"
   },
   "app": {

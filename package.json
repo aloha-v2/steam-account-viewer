@@ -3,9 +3,11 @@
   "private": true,
   "version": "0.1.0",
   "description": "Просмотр и очистка локальных записей входа Steam",
+  "type": "module",
   "scripts": {
-    "dev": "tauri dev",
-    "build": "tauri build",
+    "frontend": "node -e \"require('fs').mkdirSync('dist',{recursive:true});require('fs').copyFileSync('index.html','dist/index.html')\"",
+    "dev": "npm run frontend && tauri dev",
+    "build": "npm run frontend && tauri build --no-bundle",
     "tauri": "tauri"
   },
   "devDependencies": {
