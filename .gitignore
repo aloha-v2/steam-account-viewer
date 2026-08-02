@@ -1,5 +1,8 @@
-node_modules/
-dist/
-src-tauri/target/
+node_modules
+dist
 .DS_Store
-*.log
+Thumbs.db
+
+# rust / tauri
+src-tauri/target
+src-tauri/gen/schemas

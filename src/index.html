@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Steam Account Viewer</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 6.1"/><path d="M20 5v6h-6"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9.5 7V5.5A1.5 1.5 0 0 1 11 4h2a1.5 1.5 0 0 1 1.5 1.5V7"/><path d="M6.5 7l.8 11.2A2 2 0 0 0 9.3 20h5.4a2 2 0 0 0 2-1.8L17.5 7"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4l2 2.2h7A1.5 1.5 0 0 1 19 9.7v7.8A1.5 1.5 0 0 1 17.5 19h-13A1.5 1.5 0 0 1 3 17.5z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.2"/><path d="M15.6 15.6L20 20"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.8 3.6 19h16.8z"/><path d="M12 10v4"/><path d="M12 16.8h.01"/></symbol>
+  <symbol id="i-min" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 12h10"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 7l10 10M17 7 7 17"/></symbol>
+</svg>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<div id="frame">
+  <div class="titlebar" data-tauri-drag-region>
+    <div class="tb-name" data-tauri-drag-region>Steam Account Viewer</div>
+    <div class="tb-actions">
+      <button class="tb-btn" id="btn-min" aria-label="Свернуть"><svg class="ic"><use href="#i-min"/></svg></button>
+      <button class="tb-btn danger" id="btn-close" aria-label="Закрыть"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+  </div>
+
+  <main>
+    <header class="head">
+      <div class="head-text">
+        <h1>Аккаунты Steam</h1>
+        <p>Записи входа, сохранённые на этом компьютере</p>
+      </div>
+      <button class="btn ghost" id="btn-rescan"><svg class="ic"><use href="#i-refresh"/></svg>Пересканировать</button>
+    </header>
+
+    <div class="pathbar glass" id="pathbar">
+      <svg class="ic dim"><use href="#i-folder"/></svg>
+      <span class="path mono" id="path-text">Поиск папки Steam…</span>
+      <span class="pill" id="path-src" hidden>вручную</span>
+      <button class="btn tiny" id="btn-pick">Изменить</button>
+    </div>
+
+    <div class="toolbar">
+      <label class="search">
+        <svg class="ic dim"><use href="#i-search"/></svg>
+        <input id="q" type="search" placeholder="Имя, логин или SteamID" autocomplete="off" spellcheck="false" />
+      </label>
+      <div class="seg" id="seg" role="tablist">
+        <span class="seg-thumb" aria-hidden="true"></span>
+        <button class="seg-btn is-on" data-sort="date" role="tab">По дате</button>
+        <button class="seg-btn" data-sort="name" role="tab">По имени</button>
+        <button class="seg-btn" data-sort="size" role="tab">По объёму</button>
+      </div>
+    </div>
+
+    <section class="panel glass" id="list" aria-live="polite"></section>
+
+    <footer class="foot">
+      <span id="foot-count">—</span>
+      <span class="foot-note"><svg class="ic dim"><use href="#i-warn"/></svg>Закройте Steam перед удалением, иначе клиент перезапишет файлы</span>
+    </footer>
+  </main>
+</div>
+
+<div class="modal-root" id="modal" hidden>
+  <div class="scrim" data-close></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="sheet-head">
+      <div class="sheet-mark"><svg class="ic"><use href="#i-trash"/></svg></div>
+      <h2 id="m-title">Удалить локальные данные</h2>
+      <p id="m-lead"></p>
+    </div>
+    <div class="sheet-body">
+      <ul class="artifacts" id="m-artifacts"></ul>
+      <p class="disclaimer">Аккаунт Steam и всё, что хранится в облаке, остаётся нетронутым. Удаляются только локальные следы того, что в этот аккаунт заходили с этого компьютера.</p>
+      <label class="confirm">
+        <span>Чтобы продолжить, введите <b>подтверждаю</b></span>
+        <input id="m-input" type="text" autocomplete="off" spellcheck="false" placeholder="подтверждаю" />
+      </label>
+    </div>
+    <div class="sheet-foot">
+      <button class="btn ghost" data-close>Отмена</button>
+      <button class="btn danger" id="m-go" disabled>Удалить данные</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

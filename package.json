@@ -2,14 +2,13 @@
   "name": "steam-account-viewer",
   "private": true,
   "version": "0.1.0",
-  "type": "module",
+  "description": "Просмотр и очистка локальных записей входа Steam",
   "scripts": {
-    "frontend": "node -e \"require('fs').mkdirSync('dist',{recursive:true});require('fs').copyFileSync('index.html','dist/index.html')\"",
-    "tauri": "tauri",
-    "dev": "npm run frontend && tauri dev",
-    "build": "npm run frontend && tauri build --no-bundle"
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.8.0"
+    "@tauri-apps/cli": "^2"
   }
 }
