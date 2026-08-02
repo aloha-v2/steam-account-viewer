@@ -334,10 +334,25 @@ fn delete_local_account_data(steam_id: String, confirmation: String) -> Result<(
     Ok(())
 }
 
+#[tauri::command]
+fn open_steam_profile(steam_id: String) -> Result<(), String> {
+    if steam_id.len() < 16 || !steam_id.chars().all(|c| c.is_ascii_digit()) {
+        return Err("Некорректный Steam ID.".into());
+    }
+    let url = format!("https://steamcommunity.com/profiles/{steam_id}");
+    #[cfg(windows)]
+    let result = Command::new("cmd").args(["/C", "start", "", &url]).spawn();
+    #[cfg(target_os = "macos")]
+    let result = Command::new("open").arg(&url).spawn();
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let result = Command::new("xdg-open").arg(&url).spawn();
+    result.map(|_| ()).map_err(|_| "Не удалось открыть браузер.".to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![scan_steam_accounts, delete_local_account_data])
+        .invoke_handler(tauri::generate_handler![scan_steam_accounts, delete_local_account_data, open_steam_profile])
         .run(tauri::generate_context!())
         .expect("error while running Steam Accounts");
 }
