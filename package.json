@@ -4,9 +4,10 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "frontend": "node -e \"require('fs').mkdirSync('dist',{recursive:true});require('fs').copyFileSync('index.html','dist/index.html')\"",
     "tauri": "tauri",
-    "dev": "tauri dev",
-    "build": "tauri build --no-bundle"
+    "dev": "npm run frontend && tauri dev",
+    "build": "npm run frontend && tauri build --no-bundle"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.8.0"

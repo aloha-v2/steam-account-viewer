@@ -271,9 +271,7 @@ fn delete_local_account_data(steam_id: String, confirmation: String) -> Result<(
     let updated = remove_account_block(&raw, &steam_id).ok_or_else(|| "Эта локальная запись уже не существует.".to_string())?;
     let backup = loginusers.with_extension("vdf.sav-backup");
     fs::copy(&loginusers, &backup).map_err(|_| "Не удалось создать резервную копию loginusers.vdf.".to_string())?;
-    let temp = loginusers.with_extension("vdf.tmp");
-    fs::write(&temp, updated).map_err(|_| "Не удалось записать обновлённые данные.".to_string())?;
-    fs::rename(&temp, &loginusers).map_err(|_| "Не удалось заменить loginusers.vdf.".to_string())?;
+    fs::write(&loginusers, updated).map_err(|_| "Не удалось обновить loginusers.vdf. Резервная копия сохранена рядом.".to_string())?;
     remove_avatar_cache(&steam, &steam_id);
     Ok(())
 }

@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "identifier": "com.aloha.steam-account-viewer",
   "build": {
-    "frontendDist": ".."
+    "frontendDist": "../dist"
   },
   "app": {
     "withGlobalTauri": true,
